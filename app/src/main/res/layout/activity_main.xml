@@ -4,8 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerHorizontal="false"
+    android:layout_gravity="center"
     android:background="#2D2F31"
-    tools:context=".MainActivity" >
+    android:foregroundTintMode="add"
+    android:hapticFeedbackEnabled="false"
+    android:keepScreenOn="false"
+    android:layerType="none"
+    android:layoutMode="opticalBounds"
+    android:textAlignment="textStart"
+    android:textDirection="rtl"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="66dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="#00FFFFFF"
+        android:foreground="@drawable/gear"
+        android:onClick="onClickSettings"
+        android:textAlignment="viewStart"
+        android:textColor="#7EFFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/thirdLight"
@@ -25,11 +49,10 @@
         android:id="@+id/firstLight"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="84dp"
         android:background="#00FFFFFF"
         android:foreground="@drawable/grey_round"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -52,13 +75,15 @@
     <Button
         android:id="@+id/startOrStopButton"
         style="@android:style/Widget.Material.Light.Button.Toggle"
-        android:layout_width="90dp"
-        android:layout_height="52dp"
+        android:layout_width="79dp"
+        android:layout_height="33dp"
         android:background="#1DB5A8A8"
         android:onClick="onClickStartOrStopButton"
         android:shadowDx="100"
         android:shadowRadius="100"
         android:text="@string/start"
+        android:textColor="#70FFFFFF"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,14 +92,18 @@
 
     <Button
         android:id="@+id/dayOrNightModeButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="75dp"
+        android:layout_height="65dp"
         android:layout_marginTop="16dp"
         android:background="#00FFFFFF"
-        android:foreground="@drawable/hotpng_com_5_"
+        android:foreground="@drawable/colourful_moon"
         android:onClick="onClickDayOrNightMode"
+        android:text="day"
+        android:textAlignment="viewStart"
+        android:textColor="#7EFFFFFF"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
+        app:layout_constraintHorizontal_bias="0.996"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
