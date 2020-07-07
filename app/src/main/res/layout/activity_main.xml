@@ -92,8 +92,8 @@
 
     <Button
         android:id="@+id/dayOrNightModeButton"
-        android:layout_width="75dp"
-        android:layout_height="65dp"
+        android:layout_width="84dp"
+        android:layout_height="68dp"
         android:layout_marginTop="16dp"
         android:background="#00FFFFFF"
         android:foreground="@drawable/colourful_moon"
