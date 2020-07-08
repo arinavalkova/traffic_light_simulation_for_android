@@ -27,6 +27,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        connectObjectsWithId();
+    }
+
+    private void connectObjectsWithId()
+    {
         fillArrayListOfLightsWithIdOfTheirLayouts();
         startStopButton = findViewById(R.id.startOrStopButton);
         dayNightButton = findViewById(R.id.dayOrNightModeButton);
