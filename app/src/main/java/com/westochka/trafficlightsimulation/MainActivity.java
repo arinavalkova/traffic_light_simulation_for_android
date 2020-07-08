@@ -21,13 +21,6 @@ public class MainActivity extends AppCompatActivity
     private boolean dayModeEnableInsteadNightMode = true;
     private boolean trafficLightIsWorking = false;
 
-    void fillArrayListOfLightsWithIdOfTheirLayouts()
-    {
-        layoutsWithLights.add((FrameLayout) findViewById(R.id.firstLight));
-        layoutsWithLights.add((FrameLayout) findViewById(R.id.secondLight));
-        layoutsWithLights.add((FrameLayout) findViewById(R.id.thirdLight));
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -37,6 +30,13 @@ public class MainActivity extends AppCompatActivity
         fillArrayListOfLightsWithIdOfTheirLayouts();
         startStopButton = findViewById(R.id.startOrStopButton);
         dayNightButton = findViewById(R.id.dayOrNightModeButton);
+    }
+
+    private void fillArrayListOfLightsWithIdOfTheirLayouts()
+    {
+        layoutsWithLights.add((FrameLayout) findViewById(R.id.firstLight));
+        layoutsWithLights.add((FrameLayout) findViewById(R.id.secondLight));
+        layoutsWithLights.add((FrameLayout) findViewById(R.id.thirdLight));
     }
 
     public void onClickStartOrStopButton(View view)
@@ -59,53 +59,26 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onClickDayOrNightMode(View view)
+    private boolean isDayModeEnableInsteadNightMode()
     {
-        disAllowTrafficLightToWork();
-        if (isDayModeEnableInsteadNightMode())
-        {
-            startNightMode();
-        } else
-        {
-            startDayMode();
-        }
+        return dayModeEnableInsteadNightMode;
     }
 
-    public void onClickSettings()
+    private boolean isTrafficLightAllowedToWorkRightNow()
     {
-
+        return trafficLightIsWorking;
     }
 
-    public void startWorkingNightTrafficLightInNewThread()
+    private void disAllowTrafficLightToWork()
     {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                while (isTrafficLightAllowedToWorkRightNow())
-                {
-                    nightTrafficLightWorking();
-                }
-            }
-        }).start();
+        trafficLightIsWorking = false;
+        changeButtonText();
     }
 
-    private void nightTrafficLightWorking()
+    private void allowTrafficLightToWork()
     {
-        try
-        {
-            nightSecondLightWorking();
-        } catch (StopTrafficLightWorkingException stopTrafficLightWorking)
-        {
-            changeColorOfLightOnUiThreadToGray();
-        }
-    }
-
-    private void nightSecondLightWorking() throws StopTrafficLightWorkingException
-    {
-        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
+        trafficLightIsWorking = true;
+        changeButtonText();
     }
 
     private void changeButtonText()
@@ -127,7 +100,22 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void startWorkingDayTrafficLightInNewThread()
+    private void startWorkingNightTrafficLightInNewThread()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (isTrafficLightAllowedToWorkRightNow())
+                {
+                    nightTrafficLightWorking();
+                }
+            }
+        }).start();
+    }
+
+    private void startWorkingDayTrafficLightInNewThread()
     {
         new Thread(new Runnable()
         {
@@ -140,6 +128,17 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }).start();
+    }
+
+    private void nightTrafficLightWorking()
+    {
+        try
+        {
+            nightSecondLightWorking();
+        } catch (StopTrafficLightWorkingException stopTrafficLightWorking)
+        {
+            changeColorOfLightOnUiThreadToGray();
+        }
     }
 
     private void dayTrafficLightWorking()
@@ -163,20 +162,10 @@ public class MainActivity extends AppCompatActivity
         changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.THIRD_LIGHT_ID), R.drawable.grey_round);
     }
 
-    private void dayThirdLightWorking() throws StopTrafficLightWorkingException
+    private void nightSecondLightWorking() throws StopTrafficLightWorkingException
     {
-        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.SIX_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ZERO_SECOND);
-    }
-
-    private void daySecondLightWorking() throws StopTrafficLightWorkingException
-    {
-        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.THREE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ZERO_SECOND);
+        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
     }
 
     private void dayFirstLightWorking() throws StopTrafficLightWorkingException
@@ -187,6 +176,22 @@ public class MainActivity extends AppCompatActivity
         changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.FIRST_LIGHT_ID), Consts.ONE_SECOND);
         changeColorOfLightAndSleep(R.drawable.red_round, layoutsWithLights.get(Consts.FIRST_LIGHT_ID), Consts.ONE_SECOND);
         changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.FIRST_LIGHT_ID), Consts.ZERO_SECOND);
+    }
+
+    private void daySecondLightWorking() throws StopTrafficLightWorkingException
+    {
+        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.THREE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ZERO_SECOND);
+    }
+
+    private void dayThirdLightWorking() throws StopTrafficLightWorkingException
+    {
+        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.SIX_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.green_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ZERO_SECOND);
     }
 
     private void changeColorOfLightAndSleep(int colorOfLight, FrameLayout light, Integer timeOfSleep) throws StopTrafficLightWorkingException
@@ -223,15 +228,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public boolean isDayModeEnableInsteadNightMode()
+    public void onClickDayOrNightMode(View view)
     {
-        return dayModeEnableInsteadNightMode;
+        disAllowTrafficLightToWork();
+        if (isDayModeEnableInsteadNightMode())
+        {
+            startNightMode();
+        } else
+        {
+            startDayMode();
+        }
     }
 
-    public void startNightMode()
+    private void startNightMode()
     {
         dayModeEnableInsteadNightMode = false;
         changeNightModeImage();
+    }
+
+    private void startDayMode()
+    {
+        dayModeEnableInsteadNightMode = true;
+        changeDayModeImage();
     }
 
     private void changeNightModeImage()
@@ -248,12 +266,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void startDayMode()
-    {
-        dayModeEnableInsteadNightMode = true;
-        changeDayModeImage();
-    }
-
     private void changeDayModeImage()
     {
         runOnUiThread(new Runnable()
@@ -268,21 +280,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void disAllowTrafficLightToWork()
+    public void onClickSettings()
     {
-        trafficLightIsWorking = false;
-        changeButtonText();
-    }
 
-    public void allowTrafficLightToWork()
-    {
-        trafficLightIsWorking = true;
-        changeButtonText();
     }
-
-    public boolean isTrafficLightAllowedToWorkRightNow()
-    {
-        return trafficLightIsWorking;
-    }
-
 }
