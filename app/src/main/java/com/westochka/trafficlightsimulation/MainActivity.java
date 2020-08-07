@@ -265,8 +265,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                //dayNightButton.setForeground(getResources().getDrawable(R.drawable.blue_moon));
-                dayNightButton.setText(Consts.NIGHT_MODE_TEXT);
+                dayNightButton.setForeground(getResources().getDrawable(R.drawable.whitemoon));
             }
         });
     }
@@ -279,8 +278,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                //dayNightButton.setForeground(getResources().getDrawable(R.drawable.yellow_moon));
-                dayNightButton.setText(Consts.DAY_MODE_TEXT);
+                dayNightButton.setForeground(getResources().getDrawable(R.drawable.blackmoon));
             }
         });
     }
