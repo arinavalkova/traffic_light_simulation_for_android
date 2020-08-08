@@ -1,5 +1,6 @@
 package com.westochka.trafficlightsimulation;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -283,8 +284,16 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void onClickSettings()
+    public void onClickSettings(View view)
     {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 
+    @Override
+    protected void onDestroy()
+    {
+        disAllowTrafficLightToWork();
+        super.onDestroy();
     }
 }
