@@ -1,6 +1,7 @@
 package com.westochka.trafficlightsimulation;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity
 {
     private Button startStopButton;
     private Button dayNightButton;
+    private MediaPlayer trafficLightSound;
 
     ArrayList<FrameLayout> layoutsWithLights = new ArrayList<>();
 
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         fillArrayListOfLightsWithIdOfTheirLayouts();
         startStopButton = findViewById(R.id.startOrStopButton);
         dayNightButton = findViewById(R.id.dayOrNightModeButton);
+        trafficLightSound = MediaPlayer.create(this, R.raw.traffic_light_sound);
     }
 
     private void fillArrayListOfLightsWithIdOfTheirLayouts()
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
+                trafficLightSound.start();
                 currentLight.setForeground(getResources().getDrawable(idOfColor));
             }
         });
@@ -286,8 +290,8 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickSettings(View view)
     {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, SettingsActivity.class);
+        //startActivity(intent);
     }
 
     @Override

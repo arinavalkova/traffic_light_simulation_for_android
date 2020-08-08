@@ -4,8 +4,6 @@ public class Consts
 {
     static final String STOP_TEXT = "stop";
     static final String START_TEXT = "start";
-    static final String NIGHT_MODE_TEXT = "night";
-    static final String DAY_MODE_TEXT = "day";
     static final int FIRST_LIGHT_ID = 0;
     static final int SECOND_LIGHT_ID = 1;
     static final int THIRD_LIGHT_ID = 2;
