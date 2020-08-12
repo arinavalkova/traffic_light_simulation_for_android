@@ -1,7 +1,8 @@
 package com.westochka.trafficlightsimulation;
 
+import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,12 +18,15 @@ public class MainActivity extends AppCompatActivity
 {
     private Button startStopButton;
     private Button dayNightButton;
-    private MediaPlayer trafficLightSound;
 
     ArrayList<FrameLayout> layoutsWithLights = new ArrayList<>();
+    MusicController musicController;
 
-    private boolean dayModeEnableInsteadNightMode = true;
+    private boolean isDayModeInsteadOfNightMode = true;
     private boolean trafficLightIsWorking = false;
+
+    private boolean isMusicAllowed = true;
+    private float speed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         connectObjectsWithId();
+        setSettingsFromStorage();
+        setMusic();
+        setCurrentStateOfChangeModeButton();
     }
 
     private void connectObjectsWithId()
@@ -38,7 +45,6 @@ public class MainActivity extends AppCompatActivity
         fillArrayListOfLightsWithIdOfTheirLayouts();
         startStopButton = findViewById(R.id.startOrStopButton);
         dayNightButton = findViewById(R.id.dayOrNightModeButton);
-        trafficLightSound = MediaPlayer.create(this, R.raw.traffic_light_sound);
     }
 
     private void fillArrayListOfLightsWithIdOfTheirLayouts()
@@ -46,6 +52,69 @@ public class MainActivity extends AppCompatActivity
         layoutsWithLights.add((FrameLayout) findViewById(R.id.firstLight));
         layoutsWithLights.add((FrameLayout) findViewById(R.id.secondLight));
         layoutsWithLights.add((FrameLayout) findViewById(R.id.thirdLight));
+    }
+
+    private void setSettingsFromStorage()
+    {
+        isMusicAllowed = SettingsActivity.getIsMusicAllowed(this);
+        speed = SettingsActivity.getSpeed(this);
+        isDayModeInsteadOfNightMode = MainActivity.getIsDayModeInsteadOfNightMode(this);
+    }
+
+    public static boolean getIsDayModeInsteadOfNightMode(Context context)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Consts.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+
+        return sharedPreferences.getBoolean(Consts.IS_DAY_MODE_INSTEAD_OF_NIGHT_MODE, true);
+    }
+
+    private void setMusic()
+    {
+        musicController = new MusicController(this, isMusicAllowed);
+        setCurrentModeMusic();
+        musicController.startMusic();
+    }
+
+    private void setCurrentModeMusic()
+    {
+        if(isDayModeInsteadOfNightMode)
+            musicController.setMusic(R.raw.cyber_pank_sound);
+        else
+            musicController.setMusic(R.raw.night_sound);
+    }
+
+    private void setCurrentStateOfChangeModeButton()
+    {
+        if(isDayModeInsteadOfNightMode)
+            changeDayModeImage();
+        else
+            changeNightModeImage();
+    }
+
+    private void changeNightModeImage()
+    {
+        runOnUiThread(new Runnable()
+        {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void run()
+            {
+                dayNightButton.setForeground(getResources().getDrawable(R.drawable.whitemoon));
+            }
+        });
+    }
+
+    private void changeDayModeImage()
+    {
+        runOnUiThread(new Runnable()
+        {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void run()
+            {
+                dayNightButton.setForeground(getResources().getDrawable(R.drawable.blackmoon));
+            }
+        });
     }
 
     public void onClickStartOrStopButton(View view)
@@ -57,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         {
             allowTrafficLightToWork();
 
-            if(isDayModeEnableInsteadNightMode())
+            if(isDayModeInsteadOfNightMode)
             {
                 startWorkingDayTrafficLightInNewThread();
             }
@@ -66,11 +135,6 @@ public class MainActivity extends AppCompatActivity
                 startWorkingNightTrafficLightInNewThread();
             }
         }
-    }
-
-    private boolean isDayModeEnableInsteadNightMode()
-    {
-        return dayModeEnableInsteadNightMode;
     }
 
     private boolean isTrafficLightAllowedToWorkRightNow()
@@ -109,21 +173,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void startWorkingNightTrafficLightInNewThread()
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                while (isTrafficLightAllowedToWorkRightNow())
-                {
-                    nightTrafficLightWorking();
-                }
-            }
-        }).start();
-    }
-
     private void startWorkingDayTrafficLightInNewThread()
     {
         new Thread(new Runnable()
@@ -139,15 +188,19 @@ public class MainActivity extends AppCompatActivity
         }).start();
     }
 
-    private void nightTrafficLightWorking()
+    private void startWorkingNightTrafficLightInNewThread()
     {
-        try
+        new Thread(new Runnable()
         {
-            nightSecondLightWorking();
-        } catch (StopTrafficLightWorkingException stopTrafficLightWorking)
-        {
-            changeColorOfLightOnUiThreadToGray();
-        }
+            @Override
+            public void run()
+            {
+                while (isTrafficLightAllowedToWorkRightNow())
+                {
+                    nightTrafficLightWorking();
+                }
+            }
+        }).start();
     }
 
     private void dayTrafficLightWorking()
@@ -162,19 +215,6 @@ public class MainActivity extends AppCompatActivity
         {
             changeColorOfLightOnUiThreadToGray();
         }
-    }
-
-    private void changeColorOfLightOnUiThreadToGray()
-    {
-        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.FIRST_LIGHT_ID), R.drawable.grey_round);
-        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.SECOND_LIGHT_ID), R.drawable.grey_round);
-        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.THIRD_LIGHT_ID), R.drawable.grey_round);
-    }
-
-    private void nightSecondLightWorking() throws StopTrafficLightWorkingException
-    {
-        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
-        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
     }
 
     private void dayFirstLightWorking() throws StopTrafficLightWorkingException
@@ -203,10 +243,34 @@ public class MainActivity extends AppCompatActivity
         changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.THIRD_LIGHT_ID), Consts.ZERO_SECOND);
     }
 
+    private void changeColorOfLightOnUiThreadToGray()
+    {
+        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.FIRST_LIGHT_ID), R.drawable.grey_round);
+        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.SECOND_LIGHT_ID), R.drawable.grey_round);
+        changeColorOfLightOnUiThread(layoutsWithLights.get(Consts.THIRD_LIGHT_ID), R.drawable.grey_round);
+    }
+
+    private void nightTrafficLightWorking()
+    {
+        try
+        {
+            nightSecondLightWorking();
+        } catch (StopTrafficLightWorkingException stopTrafficLightWorking)
+        {
+            changeColorOfLightOnUiThreadToGray();
+        }
+    }
+
+    private void nightSecondLightWorking() throws StopTrafficLightWorkingException
+    {
+        changeColorOfLightAndSleep(R.drawable.yellow_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
+        changeColorOfLightAndSleep(R.drawable.grey_round, layoutsWithLights.get(Consts.SECOND_LIGHT_ID), Consts.ONE_SECOND);
+    }
+
     private void changeColorOfLightAndSleep(int colorOfLight, FrameLayout light, Integer timeOfSleep) throws StopTrafficLightWorkingException
     {
         changeColorOfLightOnUiThread(light, colorOfLight);
-        sleepingForTime(timeOfSleep);
+        sleepingForTime((int) (timeOfSleep / speed));
     }
 
     private void changeColorOfLightOnUiThread(final FrameLayout currentLight, final int idOfColor)
@@ -216,7 +280,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                trafficLightSound.start();
                 currentLight.setForeground(getResources().getDrawable(idOfColor));
             }
         });
@@ -240,64 +303,53 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickDayOrNightMode(View view)
     {
+        changeMode();
+        saveIsDayModeInsteadOfNightMode(isDayModeInsteadOfNightMode);
+        setCurrentStateOfChangeModeButton();
+        setCurrentModeMusic();
+        musicController.startMusic();
         disAllowTrafficLightToWork();
-        if (isDayModeEnableInsteadNightMode())
-        {
-            startNightMode();
-        } else
-        {
-            startDayMode();
-        }
     }
 
-    private void startNightMode()
+    private void changeMode()
     {
-        dayModeEnableInsteadNightMode = false;
-        changeNightModeImage();
+        isDayModeInsteadOfNightMode = !isDayModeInsteadOfNightMode;
     }
 
-    private void startDayMode()
+    private void saveIsDayModeInsteadOfNightMode(boolean isDayMode)
     {
-        dayModeEnableInsteadNightMode = true;
-        changeDayModeImage();
-    }
-
-    private void changeNightModeImage()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void run()
-            {
-                dayNightButton.setForeground(getResources().getDrawable(R.drawable.whitemoon));
-            }
-        });
-    }
-
-    private void changeDayModeImage()
-    {
-        runOnUiThread(new Runnable()
-        {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void run()
-            {
-                dayNightButton.setForeground(getResources().getDrawable(R.drawable.blackmoon));
-            }
-        });
+        SharedPreferences sharedPreferences = this.getSharedPreferences(Consts.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(Consts.IS_DAY_MODE_INSTEAD_OF_NIGHT_MODE, isDayMode);
+        editor.apply();
     }
 
     public void onClickSettings(View view)
     {
-        //Intent intent = new Intent(this, SettingsActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     @Override
     protected void onDestroy()
     {
+        musicController.releaseMusic();
         disAllowTrafficLightToWork();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        musicController.pauseMusic();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        musicController.startMusic();
+        setCurrentStateOfChangeModeButton();
+        super.onResume();
     }
 }

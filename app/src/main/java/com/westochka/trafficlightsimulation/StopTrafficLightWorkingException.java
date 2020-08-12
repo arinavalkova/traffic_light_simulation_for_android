@@ -1,5 +1,3 @@
 package com.westochka.trafficlightsimulation;
 
-public class StopTrafficLightWorkingException extends Throwable
-{
-}
+public class StopTrafficLightWorkingException extends Throwable {}
