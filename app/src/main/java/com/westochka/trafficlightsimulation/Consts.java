@@ -19,4 +19,5 @@ public class Consts
     public static final int THREE_SECOND = 3000;
     public static final int TEN_MILLIS = 10;
     public static final String IS_DAY_MODE_INSTEAD_OF_NIGHT_MODE = "is day mode instead of night mode";
+    public static final int TWO_SECONDS = 2000;
 }
