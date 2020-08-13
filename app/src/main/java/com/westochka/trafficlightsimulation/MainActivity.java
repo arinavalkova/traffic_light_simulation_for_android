@@ -352,4 +352,11 @@ public class MainActivity extends AppCompatActivity
         setCurrentStateOfChangeModeButton();
         super.onResume();
     }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        finish();
+    }
 }

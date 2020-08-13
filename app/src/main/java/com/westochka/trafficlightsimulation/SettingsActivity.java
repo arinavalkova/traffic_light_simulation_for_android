@@ -128,4 +128,11 @@ public class SettingsActivity extends Activity
 
         return sharedPreferences.getFloat(Consts.SPEED_FIELD, defaultSpeed);
     }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        finish();
+    }
 }
