@@ -6,34 +6,34 @@
     android:layout_height="match_parent"
     android:background="#221F2B">
 
-    <Button
+    <ImageButton
         android:id="@+id/backButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:background="#00FFFFFF"
-        android:foreground="@drawable/arrow1"
+        android:layout_width="83dp"
+        android:layout_height="84dp"
+        android:background="@null"
+        android:contentDescription="@string/blackmoon"
         android:onClick="onClickedBackToMainActivityButton"
-        android:textAlignment="viewStart"
-        android:textColor="#7EFFFFFF"
-        android:textSize="12sp"
+        android:src="@drawable/arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.091"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.102"
+        app:srcCompat="@drawable/arrow" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/settingsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:capitalize="none"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textColor="@color/grey"
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.311" />
+        app:layout_constraintVertical_bias="0.323" />
 
     <CheckBox
         android:id="@+id/musicCheckBox"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.009"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintStart_toEndOf="@+id/musicView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.443" />
 
@@ -67,16 +67,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/speedView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.512"
         app:tickMarkTint="@color/grey" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/speedView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Speed"
+        android:text="@string/speed"
         android:textColor="@color/grey"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -87,10 +87,10 @@
         app:layout_constraintVertical_bias="0.509" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/musicView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Music"
+        android:text="@string/music"
         android:textColor="@color/grey"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"

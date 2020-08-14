@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
 {
     private Button startStopButton;
-    private Button dayNightButton;
+    private ImageButton dayNightButton;
 
     ArrayList<FrameLayout> layoutsWithLights = new ArrayList<>();
     MusicController musicController;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     {
         overridePendingTransition(R.anim.activities_animation,R.anim.alpha);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         connectObjectsWithId();
         setSettingsFromStorage();
@@ -100,7 +101,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                dayNightButton.setForeground(getResources().getDrawable(R.drawable.whitemoon));
+                //dayNightButton.setForeground(getResources().getDrawable(R.drawable.whitemoon));
+                dayNightButton.setImageDrawable(getResources().getDrawable(R.drawable.whitemoon));
             }
         });
     }
@@ -113,7 +115,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run()
             {
-                dayNightButton.setForeground(getResources().getDrawable(R.drawable.blackmoon));
+                //dayNightButton.setForeground(getResources().getDrawable(R.drawable.blackmoon));
+                dayNightButton.setImageDrawable(getResources().getDrawable(R.drawable.blackmoon));
             }
         });
     }
