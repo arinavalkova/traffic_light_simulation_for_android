@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2D2F31">
+    android:background="#221F2B">
 
     <Button
         android:id="@+id/backButton"

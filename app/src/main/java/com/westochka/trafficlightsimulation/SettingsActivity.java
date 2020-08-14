@@ -20,6 +20,7 @@ public class SettingsActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.activities_animation,R.anim.alpha);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 

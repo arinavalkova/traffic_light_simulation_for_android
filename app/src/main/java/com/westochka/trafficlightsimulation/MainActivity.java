@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.activities_animation,R.anim.alpha);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
