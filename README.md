@@ -1,0 +1,3 @@
+# TrafficLightSimulation
+
+![](appWorkGif.gif)
